@@ -32,7 +32,7 @@ resource "aws_lb" "hooli" {
 
 resource "aws_lb_listener" "hooli" {
   load_balancer_arn = aws_lb.hooli.arn
-  port              = "80"
+  port              = "8080"
   protocol          = "HTTP"
 
   default_action {
@@ -48,8 +48,8 @@ resource "aws_security_group" "lb_sg" {
 
   ingress {
     description      = "TLS from VPC"
-    from_port        = 80
-    to_port          = 80
+    from_port        = 8080
+    to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
@@ -66,7 +66,7 @@ resource "aws_security_group" "lb_sg" {
 
 resource "aws_lb_target_group" "tg_blue" {
     name        = "tf-hooli-lb-tg-blue"
-    port        = 443
+    port        = 8080
     protocol    = "HTTP"
     target_type = "ip"
     vpc_id      = module.vpc.vpc_id
@@ -75,7 +75,7 @@ resource "aws_lb_target_group" "tg_blue" {
 
 resource "aws_lb_target_group" "tg_green" {
     name        = "tf-hooli-lb-tg-green"
-    port        = 443
+    port        = 8080
     protocol    = "HTTP"
     target_type = "ip"
     vpc_id      = module.vpc.vpc_id

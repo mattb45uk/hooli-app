@@ -12,6 +12,11 @@ resource "aws_ecs_service" "hooli" {
   task_definition = aws_ecs_task_definition.hooli.arn
   desired_count   = 3
   launch_type = "FARGATE"
+
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
   network_configuration {
         security_groups = [
             "${aws_security_group.lb_sg.id}"
@@ -23,7 +28,7 @@ resource "aws_ecs_service" "hooli" {
   load_balancer {
     target_group_arn = aws_lb_target_group.tg_blue.arn
     container_name   = "hooli"
-    container_port   = 80
+    container_port   = 8080
   }
 
 }
@@ -43,11 +48,29 @@ resource "aws_ecs_task_definition" "hooli" {
       essential = true
       "portMappings": [
                 {
-                    "containerPort": 80, 
-                    "hostPort": 80, 
+                    "containerPort": 8080, 
+                    "hostPort": 8080, 
                     "protocol": "tcp"
                 }
             ]
     }
   ])
 }
+
+resource "local_file" "appspec" {
+    content     = <<EOF
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "${aws_ecs_task_definition.hooli.arn}"
+        LoadBalancerInfo:
+          ContainerName: "hooli"
+          ContainerPort: 8080
+EOF
+    filename = "${path.module}/../appspec.yml"
+}
+
+
+
