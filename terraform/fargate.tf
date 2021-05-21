@@ -39,10 +39,11 @@ resource "aws_ecs_task_definition" "hooli" {
   requires_compatibilities = [ "FARGATE" ]
   cpu = "256"
   memory = "512"
+  execution_role_arn = aws_iam_role.exectution.arn
   container_definitions = jsonencode([
     {
       name      = "hooli"
-      image     = "nginxdemos/hello"
+      image     = "904672846176.dkr.ecr.eu-west-1.amazonaws.com/hooli-app:latest"
       cpu       = 256
       memory    = 512
       essential = true
@@ -72,5 +73,43 @@ EOF
     filename = "${path.module}/../appspec.yml"
 }
 
+resource "aws_iam_role" "exectution" {
+  name = "exectution_role"
 
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  assume_role_policy = jsonencode({
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+})
 
+  inline_policy {
+    name = "my_inline_policy"
+    policy = jsonencode({
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+})
+}
+}
