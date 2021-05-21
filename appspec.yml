@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "arn:aws:ecs:eu-west-1:904672846176:task-definition/service:2"
+        TaskDefinition: "arn:aws:ecs:eu-west-1:904672846176:task-definition/service:3"
         LoadBalancerInfo:
           ContainerName: "hooli"
           ContainerPort: 8080
