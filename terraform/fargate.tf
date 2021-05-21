@@ -97,7 +97,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "${aws_ecs_task_definition.hooli.arn}"
+        TaskDefinition: "arn:aws:ecs:eu-west-1:904672846176:task-definition/service:${data.aws_ecs_task_definition.hooli.revision}"
         LoadBalancerInfo:
           ContainerName: "hooli"
           ContainerPort: 8080
@@ -144,4 +144,11 @@ resource "aws_iam_role" "exectution" {
   ]
 })
 }
+}
+
+data "aws_ecs_task_definition" "hooli" {
+  task_definition = aws_ecs_task_definition.hooli.family
+  depends_on = [
+    aws_ecs_task_definition.hooli
+  ]
 }
