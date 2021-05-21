@@ -1,6 +1,6 @@
 {
     "family": "service",
-    "executionRoleArn": arn:aws:iam::904672846176:role/exectution_role,
+    "executionRoleArn": "arn:aws:iam::904672846176:role/exectution_role",
     "containerDefinitions": [
     {
       "name": "hooli",
