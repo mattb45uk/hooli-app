@@ -58,6 +58,37 @@ resource "aws_ecs_task_definition" "hooli" {
   ])
 }
 
+resource "local_file" "taskspec" {
+    content     = <<EOF
+{
+    "family": "service",
+    "containerDefinitions": [
+    {
+      "name": "hooli",
+      "image": "904672846176.dkr.ecr.eu-west-1.amazonaws.com/hooli-app:latest",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+                {
+                    "containerPort": 8080, 
+                    "hostPort": 8080, 
+                    "protocol": "tcp"
+                }
+            ]
+    }
+  ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "memory": "512",
+    "cpu": "256"
+}
+EOF
+    filename = "${path.module}/../taskdef.json"
+}
+
 resource "local_file" "appspec" {
     content     = <<EOF
 version: 0.0
