@@ -10,7 +10,7 @@ resource "aws_ecs_service" "hooli" {
   name            = "hooli"
   cluster         = aws_ecs_cluster.hooli.id
   task_definition = aws_ecs_task_definition.hooli.arn
-  desired_count   = 3
+  desired_count   = 1
   launch_type = "FARGATE"
 
   deployment_controller {
