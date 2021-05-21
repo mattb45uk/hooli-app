@@ -62,6 +62,7 @@ resource "local_file" "taskspec" {
     content     = <<EOF
 {
     "family": "service",
+    "executionRoleArn": ${aws_iam_role.exectution.arn},
     "containerDefinitions": [
     {
       "name": "hooli",
