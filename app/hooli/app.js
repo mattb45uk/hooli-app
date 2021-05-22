@@ -9,7 +9,7 @@ app.use(bodyParser.json())
 // Ping request                                                                                                            
 app.get('/ping',  (req,res,next) => {                                                                                      
                                                                                                                            
-    res.send({"result": "pong"})                                                                                           
+    res.send({"result": "pongo"})                                                                                           
                                                                                                                            
 });                                                                                                                        
                                                                                                                            
